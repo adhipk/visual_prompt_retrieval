@@ -1,21 +1,19 @@
 """
 Extract features for UnsupPR.
 """
+import argparse
+import glob
 import os
 import sys
-import glob
-from PIL import Image
-from tqdm import tqdm
-import numpy as np
 
+import numpy as np
+import timm
 import torch
 import torchvision.models as models
-from torchvision import transforms as T
+from PIL import Image
 from torch.nn import functional as F
-
-import timm
-import sys
-
+from torchvision import transforms as T
+from tqdm import tqdm
 
 model_name = sys.argv[1]
 feature_name = sys.argv[2]
@@ -53,8 +51,17 @@ else:
     sys.exit()
 
 
-meta_root =  f"/mnt/lustre/yhzhang/visual_prompting/evaluate/splits/pascal/{split}"
-image_root = "/mnt/lustre/share/yhzhang/pascal-5i/VOC2012/JPEGImages"
+parser = argparse.ArgumentParser(description='A test program.')
+
+parser.add_argument("--meta_root", help="meta root dir", default="/mnt/lustre/yhzhang/visual_prompting/evaluate/splits/pascal")
+parser.add_argument("--image_root", help="image_root", default="/mnt/lustre/share/yhzhang/pascal-5i/VOC2012/JPEGImages")
+
+args = parser.parse_args()
+
+print(args.print_string)
+
+meta_root =  f"{args.meta_root}/{split}"
+image_root = f"{args.image_root}"
 for folder_id in tqdm(range(4)):
     print(f"Processing folder {folder_id}")
     sys.stdout.flush()
